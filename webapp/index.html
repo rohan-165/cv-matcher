@@ -1,352 +1,416 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Candidate Search</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #14171c;
-    --surface: #1b2027;
-    --surface-2: #232a33;
-    --border: #2d3540;
-    --text: #e8eaed;
-    --text-dim: #8c94a0;
-    --text-faint: #5d6470;
-    --accent: #4fd1ae;
-    --accent-dim: #2f6f5e;
-    --amber: #e0a458;
-    --radius: 10px;
-  }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Candidate Search</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #14171c;
+      --surface: #1b2027;
+      --surface-2: #232a33;
+      --border: #2d3540;
+      --text: #e8eaed;
+      --text-dim: #8c94a0;
+      --text-faint: #5d6470;
+      --accent: #4fd1ae;
+      --accent-dim: #2f6f5e;
+      --amber: #e0a458;
+      --radius: 10px;
+    }
 
-  * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', system-ui, sans-serif;
-    min-height: 100vh;
-  }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+    }
 
-  .shell {
-    max-width: 880px;
-    margin: 0 auto;
-    padding: 40px 20px 80px;
-  }
+    .shell {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
 
-  header {
-    margin-bottom: 32px;
-  }
+    header {
+      margin-bottom: 32px;
+    }
 
-  .eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin: 0 0 10px;
-  }
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0 0 10px;
+    }
 
-  h1 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 28px;
-    margin: 0 0 6px;
-    letter-spacing: -0.01em;
-  }
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 28px;
+      margin: 0 0 6px;
+      letter-spacing: -0.01em;
+    }
 
-  .subtitle {
-    color: var(--text-dim);
-    font-size: 14px;
-    margin: 0;
-  }
+    .subtitle {
+      color: var(--text-dim);
+      font-size: 14px;
+      margin: 0;
+    }
 
-  .search-bar {
-    display: flex;
-    gap: 10px;
-    margin-top: 28px;
-  }
+    .search-bar {
+      display: flex;
+      gap: 10px;
+      margin-top: 28px;
+    }
 
-  .search-bar input[type="text"] {
-    flex: 1;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text);
-    font-size: 15px;
-    font-family: 'Inter', sans-serif;
-    padding: 14px 16px;
-    outline: none;
-    transition: border-color 0.15s ease;
-  }
+    .search-bar input[type="text"] {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      padding: 14px 16px;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
 
-  .search-bar input[type="text"]::placeholder { color: var(--text-faint); }
+    .search-bar input[type="text"]::placeholder {
+      color: var(--text-faint);
+    }
 
-  .search-bar input[type="text"]:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(79, 209, 174, 0.15);
-  }
+    .search-bar input[type="text"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79, 209, 174, 0.15);
+    }
 
-  .search-bar button {
-    background: var(--accent);
-    color: #0d1512;
-    border: none;
-    border-radius: var(--radius);
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    padding: 0 22px;
-    cursor: pointer;
-    transition: background 0.15s ease, transform 0.1s ease;
-  }
+    .search-bar button {
+      background: var(--accent);
+      color: #0d1512;
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 0 22px;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
 
-  .search-bar button:hover { background: #63dcbc; }
-  .search-bar button:active { transform: scale(0.97); }
-  .search-bar button:focus-visible,
-  input:focus-visible,
-  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .search-bar button:hover {
+      background: #63dcbc;
+    }
 
-  .controls-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-top: 16px;
-    font-size: 13px;
-    color: var(--text-dim);
-  }
+    .search-bar button:active {
+      transform: scale(0.97);
+    }
 
-  .controls-row label { display: flex; align-items: center; gap: 6px; }
+    .search-bar button:focus-visible,
+    input:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
 
-  .controls-row select {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: 6px;
-    padding: 4px 8px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-  }
+    .controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
 
-  #export-btn {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-size: 12px;
-    font-family: 'Inter', sans-serif;
-    cursor: pointer;
-    transition: border-color 0.15s ease, color 0.15s ease;
-  }
+    .controls-row label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-  #export-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-  #export-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .controls-row select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+    }
 
-  #status-line {
-    margin-top: 28px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: var(--text-faint);
-    min-height: 18px;
-  }
+    #export-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
 
-  #status-line.error { color: #e07a6b; }
+    #export-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
 
-  #results { margin-top: 8px; display: flex; flex-direction: column; gap: 14px; }
+    #export-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
 
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px 22px;
-    animation: rise 0.25s ease both;
-  }
+    #status-line {
+      margin-top: 28px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--text-faint);
+      min-height: 18px;
+    }
 
-  @keyframes rise {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    #status-line.error {
+      color: #e07a6b;
+    }
 
-  @media (prefers-reduced-motion: reduce) {
-    .card { animation: none; }
-  }
+    #results {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
 
-  .card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-  }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      animation: rise 0.25s ease both;
+    }
 
-  .card-top label {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    cursor: pointer;
-    flex: 1;
-    min-width: 0;
-  }
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
 
-  .card-top input[type="checkbox"] {
-    margin-top: 5px;
-    accent-color: var(--accent);
-    width: 15px;
-    height: 15px;
-    flex-shrink: 0;
-  }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-  .name {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 17px;
-    margin: 0 0 2px;
-  }
+    @media (prefers-reduced-motion: reduce) {
+      .card {
+        animation: none;
+      }
+    }
 
-  .name.unknown { color: var(--text-dim); font-weight: 500; font-style: italic; }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
 
-  .contact-line {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12.5px;
-    color: var(--text-dim);
-    margin: 0;
-    word-break: break-word;
-  }
+    .card-top label {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      flex: 1;
+      min-width: 0;
+    }
 
-  .match {
-    text-align: right;
-    flex-shrink: 0;
-    min-width: 90px;
-  }
+    .card-top input[type="checkbox"] {
+      margin-top: 5px;
+      accent-color: var(--accent);
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+    }
 
-  .match-pct {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 18px;
-    font-weight: 600;
-  }
+    .name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 17px;
+      margin: 0 0 2px;
+    }
 
-  .match-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    color: var(--text-faint);
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
+    .name.unknown {
+      color: var(--text-dim);
+      font-weight: 500;
+      font-style: italic;
+    }
 
-  .signal-track {
-    width: 90px;
-    height: 4px;
-    border-radius: 2px;
-    background: var(--surface-2);
-    margin-top: 6px;
-    overflow: hidden;
-  }
+    .contact-line {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      color: var(--text-dim);
+      margin: 0;
+      word-break: break-word;
+    }
 
-  .signal-fill {
-    height: 100%;
-    border-radius: 2px;
-    transition: width 0.4s ease;
-  }
+    .match {
+      text-align: right;
+      flex-shrink: 0;
+      min-width: 90px;
+    }
 
-  .skills-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 14px;
-  }
+    .match-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      font-weight: 600;
+    }
 
-  .skill-tag {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11.5px;
-    color: var(--text-dim);
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    padding: 3px 8px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
+    .match-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
 
-  .skill-tag::before {
-    content: '';
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--accent);
-    display: inline-block;
-  }
+    .signal-track {
+      width: 90px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--surface-2);
+      margin-top: 6px;
+      overflow: hidden;
+    }
 
-  .card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 16px;
-    padding-top: 14px;
-    border-top: 1px solid var(--border);
-  }
+    .signal-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
 
-  .source-file {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11.5px;
-    color: var(--text-faint);
-  }
+    .match-breakdown {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-faint);
+      margin-top: 6px;
+      white-space: nowrap;
+    }
 
-  .details-btn {
-    background: none;
-    border: none;
-    color: var(--accent);
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    padding: 0;
-  }
+    .skills-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 14px;
+    }
 
-  .details-btn:hover { text-decoration: underline; }
+    .skill-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: var(--text-dim);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 3px 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
 
-  .details-panel {
-    margin-top: 14px;
-    padding-top: 14px;
-    border-top: 1px dashed var(--border);
-    font-size: 13.5px;
-    line-height: 1.6;
-    color: var(--text-dim);
-    display: none;
-  }
+    .skill-tag::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
+    }
 
-  .details-panel.open { display: block; }
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
 
-  .details-panel .field { margin-bottom: 8px; }
-  .details-panel .field-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10.5px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-faint);
-    display: block;
-    margin-bottom: 2px;
-  }
+    .source-file {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: var(--text-faint);
+    }
 
-  .empty-state, .loading-state {
-    margin-top: 60px;
-    text-align: center;
-    color: var(--text-faint);
-    font-size: 14px;
-  }
+    .details-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0;
+    }
 
-  .empty-state .big {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 18px;
-    color: var(--text-dim);
-    margin-bottom: 6px;
-  }
-</style>
+    .details-btn:hover {
+      text-decoration: underline;
+    }
+
+    .details-panel {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border);
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--text-dim);
+      display: none;
+    }
+
+    .details-panel.open {
+      display: block;
+    }
+
+    .details-panel .field {
+      margin-bottom: 8px;
+    }
+
+    .details-panel .field-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .empty-state,
+    .loading-state {
+      margin-top: 60px;
+      text-align: center;
+      color: var(--text-faint);
+      font-size: 14px;
+    }
+
+    .empty-state .big {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+  </style>
 </head>
+
 <body>
   <div class="shell">
     <header>
@@ -356,7 +420,8 @@
     </header>
 
     <div class="search-bar">
-      <input type="text" id="query-input" placeholder="e.g. Flutter developer with BLE and wearable SDK experience, 3+ years" autofocus>
+      <input type="text" id="query-input"
+        placeholder="e.g. Flutter developer with BLE and wearable SDK experience, 3+ years" autofocus>
       <button id="search-btn">Search</button>
     </div>
 
@@ -371,6 +436,15 @@
         </select>
         results
       </label>
+      <label>
+        Min match
+        <select id="min-score-select">
+          <option value="0.2">Loose (0.2)</option>
+          <option value="0.35" selected>Balanced (0.35)</option>
+          <option value="0.5">Strict (0.5)</option>
+          <option value="0.65">Very strict (0.65)</option>
+        </select>
+      </label>
       <button id="export-btn" disabled>Export selected to Excel</button>
     </div>
 
@@ -378,59 +452,60 @@
     <div id="results"></div>
   </div>
 
-<script>
-const queryInput = document.getElementById('query-input');
-const searchBtn = document.getElementById('search-btn');
-const topSelect = document.getElementById('top-select');
-const statusLine = document.getElementById('status-line');
-const resultsEl = document.getElementById('results');
-const exportBtn = document.getElementById('export-btn');
+  <script>
+    const queryInput = document.getElementById('query-input');
+    const searchBtn = document.getElementById('search-btn');
+    const topSelect = document.getElementById('top-select');
+    const minScoreSelect = document.getElementById('min-score-select');
+    const statusLine = document.getElementById('status-line');
+    const resultsEl = document.getElementById('results');
+    const exportBtn = document.getElementById('export-btn');
 
-let lastResults = [];
-const selectedIds = new Set();
+    let lastResults = [];
+    const selectedIds = new Set();
 
-function escapeHtml(str) {
-  if (str === null || str === undefined) return '';
-  return String(str)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
 
-function signalColor(score) {
-  if (score >= 0.6) return 'var(--accent)';
-  if (score >= 0.35) return 'var(--amber)';
-  return 'var(--text-faint)';
-}
+    function signalColor(score) {
+      if (score >= 0.6) return 'var(--accent)';
+      if (score >= 0.35) return 'var(--amber)';
+      return 'var(--text-faint)';
+    }
 
-function renderEmpty(message, isError) {
-  resultsEl.innerHTML = `
+    function renderEmpty(message, isError) {
+      resultsEl.innerHTML = `
     <div class="empty-state">
       <div class="big">${escapeHtml(message.big)}</div>
       <div>${escapeHtml(message.small)}</div>
     </div>`;
-  statusLine.textContent = '';
-  statusLine.className = isError ? 'error' : '';
-}
+      statusLine.textContent = '';
+      statusLine.className = isError ? 'error' : '';
+    }
 
-function renderResults(results) {
-  if (results.length === 0) {
-    renderEmpty({ big: 'No matches', small: 'Try describing the role differently, or check that resumes have been ingested.' }, false);
-    return;
-  }
+    function renderResults(results) {
+      if (results.length === 0) {
+        renderEmpty({ big: 'No matches', small: 'Try describing the role differently, or check that resumes have been ingested.' }, false);
+        return;
+      }
 
-  resultsEl.innerHTML = results.map((r) => {
-    const meta = r.metadata || {};
-    const name = meta.full_name && meta.full_name.trim() ? meta.full_name : '(name not detected)';
-    const nameClass = meta.full_name && meta.full_name.trim() ? 'name' : 'name unknown';
-    const pct = Math.round(Math.max(0, Math.min(1, r.score)) * 100);
-    const color = signalColor(r.score);
-    const skills = (meta.skills || '').split(',').map(s => s.trim()).filter(Boolean);
-    const contactParts = [meta.email, meta.phone, meta.location].filter(Boolean);
+      resultsEl.innerHTML = results.map((r) => {
+        const meta = r.metadata || {};
+        const name = meta.full_name && meta.full_name.trim() ? meta.full_name : '(name not detected)';
+        const nameClass = meta.full_name && meta.full_name.trim() ? 'name' : 'name unknown';
+        const pct = Math.round(Math.max(0, Math.min(1, r.score)) * 100);
+        const color = signalColor(r.score);
+        const skills = (meta.skills || '').split(',').map(s => s.trim()).filter(Boolean);
+        const contactParts = [meta.email, meta.phone, meta.location].filter(Boolean);
 
-    const skillTags = skills.length
-      ? skills.map(s => `<span class="skill-tag">${escapeHtml(s)}</span>`).join('')
-      : '<span class="skill-tag" style="opacity:0.5">no skills detected</span>';
+        const skillTags = skills.length
+          ? skills.map(s => `<span class="skill-tag">${escapeHtml(s)}</span>`).join('')
+          : '<span class="skill-tag" style="opacity:0.5">no skills detected</span>';
 
-    return `
+        return `
       <div class="card" data-id="${escapeHtml(r.candidate_id)}">
         <div class="card-top">
           <label>
@@ -444,6 +519,7 @@ function renderResults(results) {
             <div class="match-label">Match</div>
             <div class="match-pct" style="color:${color}">${pct}%</div>
             <div class="signal-track"><div class="signal-fill" style="width:${pct}%; background:${color}"></div></div>
+            <div class="match-breakdown">semantic ${Math.round(r.semantic_score * 100)}% · keyword ${Math.round(r.keyword_score * 100)}%</div>
           </div>
         </div>
 
@@ -456,147 +532,159 @@ function renderResults(results) {
 
         <div class="details-panel" id="details-${escapeHtml(r.candidate_id)}"></div>
       </div>`;
-  }).join('');
+      }).join('');
 
-  // wire up checkboxes
-  document.querySelectorAll('.select-box').forEach(box => {
-    box.addEventListener('change', () => {
-      if (box.checked) selectedIds.add(box.dataset.id);
-      else selectedIds.delete(box.dataset.id);
-      exportBtn.disabled = selectedIds.size === 0;
-    });
-  });
+      // wire up checkboxes
+      document.querySelectorAll('.select-box').forEach(box => {
+        box.addEventListener('change', () => {
+          if (box.checked) selectedIds.add(box.dataset.id);
+          else selectedIds.delete(box.dataset.id);
+          exportBtn.disabled = selectedIds.size === 0;
+        });
+      });
 
-  // wire up detail toggles
-  document.querySelectorAll('.details-btn').forEach(btn => {
-    btn.addEventListener('click', () => toggleDetails(btn.dataset.id, btn));
-  });
-}
-
-async function toggleDetails(candidateId, btn) {
-  const panel = document.getElementById(`details-${candidateId}`);
-  const isOpen = panel.classList.contains('open');
-
-  if (isOpen) {
-    panel.classList.remove('open');
-    btn.textContent = 'View full details';
-    return;
-  }
-
-  if (!panel.dataset.loaded) {
-    panel.innerHTML = 'Loading…';
-    try {
-      const res = await fetch(`/api/candidate/${candidateId}`);
-      const record = await res.json();
-      if (!res.ok) throw new Error(record.error || 'Could not load candidate.');
-      panel.innerHTML = renderDetailFields(record);
-      panel.dataset.loaded = '1';
-    } catch (err) {
-      panel.innerHTML = `<span style="color:#e07a6b">${escapeHtml(err.message)}</span>`;
+      // wire up detail toggles
+      document.querySelectorAll('.details-btn').forEach(btn => {
+        btn.addEventListener('click', () => toggleDetails(btn.dataset.id, btn));
+      });
     }
-  }
 
-  panel.classList.add('open');
-  btn.textContent = 'Hide details';
-}
+    async function toggleDetails(candidateId, btn) {
+      const panel = document.getElementById(`details-${candidateId}`);
+      const isOpen = panel.classList.contains('open');
 
-function renderDetailFields(record) {
-  const p = record.parsed || {};
-  const field = (label, value) => value
-    ? `<div class="field"><span class="field-label">${escapeHtml(label)}</span>${escapeHtml(value)}</div>`
-    : '';
+      if (isOpen) {
+        panel.classList.remove('open');
+        btn.textContent = 'View full details';
+        return;
+      }
 
-  const experience = (p.experience || []).map(e =>
-    `${escapeHtml(e.title || '')} at ${escapeHtml(e.company || '')} (${escapeHtml(e.duration || '')})${e.description ? ' — ' + escapeHtml(e.description) : ''}`
-  ).join('<br>');
+      if (!panel.dataset.loaded) {
+        panel.innerHTML = 'Loading…';
+        try {
+          const res = await fetch(`/api/candidate/${candidateId}`);
+          const record = await res.json();
+          if (!res.ok) throw new Error(record.error || 'Could not load candidate.');
+          panel.innerHTML = renderDetailFields(record);
+          panel.dataset.loaded = '1';
+        } catch (err) {
+          panel.innerHTML = `<span style="color:#e07a6b">${escapeHtml(err.message)}</span>`;
+        }
+      }
 
-  const education = (p.education || []).map(e =>
-    `${escapeHtml(e.degree || '')}, ${escapeHtml(e.institution || '')} ${e.year ? '(' + escapeHtml(e.year) + ')' : ''}`
-  ).join('<br>');
-
-  return [
-    field('Summary', p.summary),
-    field('Total experience', p.total_experience_years ? `${p.total_experience_years} years` : ''),
-    experience ? field('Experience', null) + `<div class="field">${experience}</div>` : '',
-    education ? field('Education', null) + `<div class="field">${education}</div>` : '',
-    field('Certifications', (p.certifications || []).join(', ')),
-    field('Languages', (p.languages || []).join(', ')),
-    field('Source file', record.source_file),
-    field('Ingested at', record.ingested_at),
-  ].join('');
-}
-
-async function runSearch() {
-  const q = queryInput.value.trim();
-  if (!q) {
-    renderEmpty({ big: 'Type a requirement to search', small: 'e.g. "React Native developer with payments integration experience"' }, false);
-    return;
-  }
-
-  selectedIds.clear();
-  exportBtn.disabled = true;
-  statusLine.className = '';
-  statusLine.textContent = 'Searching…';
-  resultsEl.innerHTML = '';
-
-  try {
-    const top = topSelect.value;
-    const res = await fetch(`/api/search?q=${encodeURIComponent(q)}&top=${top}`);
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Search failed.');
-
-    lastResults = data.results;
-    statusLine.textContent = `${data.count} result${data.count === 1 ? '' : 's'} for "${data.query}"`;
-    renderResults(data.results);
-  } catch (err) {
-    statusLine.textContent = err.message;
-    statusLine.className = 'error';
-    renderEmpty({ big: 'Something went wrong', small: err.message }, true);
-  }
-}
-
-async function exportSelected() {
-  if (selectedIds.size === 0) return;
-  exportBtn.disabled = true;
-  exportBtn.textContent = 'Exporting…';
-
-  try {
-    const res = await fetch('/api/export', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ candidate_ids: Array.from(selectedIds) }),
-    });
-    if (!res.ok) {
-      const data = await res.json();
-      throw new Error(data.error || 'Export failed.');
+      panel.classList.add('open');
+      btn.textContent = 'Hide details';
     }
-    const blob = await res.blob();
-    const disposition = res.headers.get('Content-Disposition') || '';
-    const match = disposition.match(/filename="?([^"]+)"?/);
-    const filename = match ? match[1] : 'shortlist.xlsx';
 
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  } catch (err) {
-    statusLine.textContent = err.message;
-    statusLine.className = 'error';
-  } finally {
-    exportBtn.textContent = 'Export selected to Excel';
-    exportBtn.disabled = selectedIds.size === 0;
-  }
-}
+    function renderDetailFields(record) {
+      const p = record.parsed || {};
+      const field = (label, value) => value
+        ? `<div class="field"><span class="field-label">${escapeHtml(label)}</span>${escapeHtml(value)}</div>`
+        : '';
 
-searchBtn.addEventListener('click', runSearch);
-queryInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') runSearch(); });
-exportBtn.addEventListener('click', exportSelected);
+      const experience = (p.experience || []).map(e =>
+        `${escapeHtml(e.title || '')} at ${escapeHtml(e.company || '')} (${escapeHtml(e.duration || '')})${e.description ? ' — ' + escapeHtml(e.description) : ''}`
+      ).join('<br>');
 
-renderEmpty({ big: 'Search your candidate pool', small: 'Describe a role above to see ranked matches from everyone you\u2019ve ingested.' }, false);
-</script>
+      const education = (p.education || []).map(e =>
+        `${escapeHtml(e.degree || '')}, ${escapeHtml(e.institution || '')} ${e.year ? '(' + escapeHtml(e.year) + ')' : ''}`
+      ).join('<br>');
+
+      return [
+        field('Summary', p.summary),
+        field('Total experience', p.total_experience_years ? `${p.total_experience_years} years` : ''),
+        experience ? field('Experience', null) + `<div class="field">${experience}</div>` : '',
+        education ? field('Education', null) + `<div class="field">${education}</div>` : '',
+        field('Certifications', (p.certifications || []).join(', ')),
+        field('Languages', (p.languages || []).join(', ')),
+        field('Source file', record.source_file),
+        field('Ingested at', record.ingested_at),
+      ].join('');
+    }
+
+    async function runSearch() {
+      const q = queryInput.value.trim();
+      if (!q) {
+        renderEmpty({ big: 'Type a requirement to search', small: 'e.g. "React Native developer with payments integration experience"' }, false);
+        return;
+      }
+
+      selectedIds.clear();
+      exportBtn.disabled = true;
+      statusLine.className = '';
+      statusLine.textContent = 'Searching…';
+      resultsEl.innerHTML = '';
+
+      try {
+        const top = topSelect.value;
+        const minScore = minScoreSelect.value;
+        const res = await fetch(`/api/search?q=${encodeURIComponent(q)}&top=${top}&min_score=${minScore}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Search failed.');
+
+        lastResults = data.results;
+
+        if (data.results.length === 0) {
+          statusLine.textContent = '';
+          renderEmpty({
+            big: data.message && data.message.includes('ingested yet') ? 'No candidates ingested yet' : 'No relevant matches',
+            small: data.message || 'Try describing the role differently, or choose a looser "Min match" setting above.',
+          }, false);
+          return;
+        }
+
+        statusLine.textContent = `${data.count} result${data.count === 1 ? '' : 's'} for "${data.query}"`;
+        renderResults(data.results);
+      } catch (err) {
+        statusLine.textContent = err.message;
+        statusLine.className = 'error';
+        renderEmpty({ big: 'Something went wrong', small: err.message }, true);
+      }
+    }
+
+    async function exportSelected() {
+      if (selectedIds.size === 0) return;
+      exportBtn.disabled = true;
+      exportBtn.textContent = 'Exporting…';
+
+      try {
+        const res = await fetch('/api/export', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ candidate_ids: Array.from(selectedIds) }),
+        });
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.error || 'Export failed.');
+        }
+        const blob = await res.blob();
+        const disposition = res.headers.get('Content-Disposition') || '';
+        const match = disposition.match(/filename="?([^"]+)"?/);
+        const filename = match ? match[1] : 'shortlist.xlsx';
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        statusLine.textContent = err.message;
+        statusLine.className = 'error';
+      } finally {
+        exportBtn.textContent = 'Export selected to Excel';
+        exportBtn.disabled = selectedIds.size === 0;
+      }
+    }
+
+    searchBtn.addEventListener('click', runSearch);
+    queryInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') runSearch(); });
+    exportBtn.addEventListener('click', exportSelected);
+
+    renderEmpty({ big: 'Search your candidate pool', small: 'Describe a role above to see ranked matches from everyone you\u2019ve ingested.' }, false);
+  </script>
 </body>
+
 </html>

@@ -47,16 +47,24 @@ def index():
 def api_search():
     query = request.args.get("q", "").strip()
     top_k = int(request.args.get("top", 10))
+    min_score = float(request.args.get("min_score", embedder.DEFAULT_MIN_SCORE))
 
     if not query:
         return jsonify({"error": "Type a job requirement to search for."}), 400
 
+    if embedder.candidate_count() == 0:
+        return jsonify({
+            "query": query, "count": 0, "results": [],
+            "message": "No candidates ingested yet. Run ingest.py first.",
+        })
+
     try:
-        results = embedder.query(query, top_k=top_k)
+        results = embedder.query(query, top_k=top_k, min_score=min_score)
     except Exception as e:
         return jsonify({"error": f"Search failed: {e}"}), 500
 
-    return jsonify({"query": query, "count": len(results), "results": results})
+    message = None if results else f"No relevant candidates found (min score: {min_score})."
+    return jsonify({"query": query, "count": len(results), "results": results, "message": message})
 
 
 @app.route("/api/candidate/<candidate_id>")
