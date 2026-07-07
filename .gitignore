@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+data/candidates/*.json
+data/manifest.json
+data/vector_store/
+output/*.xlsx
+!data/candidates/.gitkeep
+!data/vector_store/.gitkeep
+!output/.gitkeep

@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Candidate Search</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #14171c;
+    --surface: #1b2027;
+    --surface-2: #232a33;
+    --border: #2d3540;
+    --text: #e8eaed;
+    --text-dim: #8c94a0;
+    --text-faint: #5d6470;
+    --accent: #4fd1ae;
+    --accent-dim: #2f6f5e;
+    --amber: #e0a458;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+  }
+
+  .shell {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  header {
+    margin-bottom: 32px;
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 28px;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .search-bar {
+    display: flex;
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  .search-bar input[type="text"] {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    padding: 14px 16px;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  .search-bar input[type="text"]::placeholder { color: var(--text-faint); }
+
+  .search-bar input[type="text"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(79, 209, 174, 0.15);
+  }
+
+  .search-bar button {
+    background: var(--accent);
+    color: #0d1512;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 0 22px;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+
+  .search-bar button:hover { background: #63dcbc; }
+  .search-bar button:active { transform: scale(0.97); }
+  .search-bar button:focus-visible,
+  input:focus-visible,
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .controls-row label { display: flex; align-items: center; gap: 6px; }
+
+  .controls-row select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  #export-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  #export-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  #export-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  #status-line {
+    margin-top: 28px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-faint);
+    min-height: 18px;
+  }
+
+  #status-line.error { color: #e07a6b; }
+
+  #results { margin-top: 8px; display: flex; flex-direction: column; gap: 14px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    animation: rise 0.25s ease both;
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card { animation: none; }
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .card-top label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .card-top input[type="checkbox"] {
+    margin-top: 5px;
+    accent-color: var(--accent);
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+
+  .name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    margin: 0 0 2px;
+  }
+
+  .name.unknown { color: var(--text-dim); font-weight: 500; font-style: italic; }
+
+  .contact-line {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--text-dim);
+    margin: 0;
+    word-break: break-word;
+  }
+
+  .match {
+    text-align: right;
+    flex-shrink: 0;
+    min-width: 90px;
+  }
+
+  .match-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .match-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .signal-track {
+    width: 90px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--surface-2);
+    margin-top: 6px;
+    overflow: hidden;
+  }
+
+  .signal-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .skills-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+  }
+
+  .skill-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--text-dim);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 3px 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .skill-tag::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .source-file {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--text-faint);
+  }
+
+  .details-btn {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .details-btn:hover { text-decoration: underline; }
+
+  .details-panel {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--border);
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--text-dim);
+    display: none;
+  }
+
+  .details-panel.open { display: block; }
+
+  .details-panel .field { margin-bottom: 8px; }
+  .details-panel .field-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .empty-state, .loading-state {
+    margin-top: 60px;
+    text-align: center;
+    color: var(--text-faint);
+    font-size: 14px;
+  }
+
+  .empty-state .big {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+</style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <p class="eyebrow">cv-matcher</p>
+      <h1>Candidate Search</h1>
+      <p class="subtitle">Describe the role. Every ingested resume gets ranked by how well it fits.</p>
+    </header>
+
+    <div class="search-bar">
+      <input type="text" id="query-input" placeholder="e.g. Flutter developer with BLE and wearable SDK experience, 3+ years" autofocus>
+      <button id="search-btn">Search</button>
+    </div>
+
+    <div class="controls-row">
+      <label>
+        Show
+        <select id="top-select">
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+        </select>
+        results
+      </label>
+      <button id="export-btn" disabled>Export selected to Excel</button>
+    </div>
+
+    <div id="status-line"></div>
+    <div id="results"></div>
+  </div>
+
+<script>
+const queryInput = document.getElementById('query-input');
+const searchBtn = document.getElementById('search-btn');
+const topSelect = document.getElementById('top-select');
+const statusLine = document.getElementById('status-line');
+const resultsEl = document.getElementById('results');
+const exportBtn = document.getElementById('export-btn');
+
+let lastResults = [];
+const selectedIds = new Set();
+
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function signalColor(score) {
+  if (score >= 0.6) return 'var(--accent)';
+  if (score >= 0.35) return 'var(--amber)';
+  return 'var(--text-faint)';
+}
+
+function renderEmpty(message, isError) {
+  resultsEl.innerHTML = `
+    <div class="empty-state">
+      <div class="big">${escapeHtml(message.big)}</div>
+      <div>${escapeHtml(message.small)}</div>
+    </div>`;
+  statusLine.textContent = '';
+  statusLine.className = isError ? 'error' : '';
+}
+
+function renderResults(results) {
+  if (results.length === 0) {
+    renderEmpty({ big: 'No matches', small: 'Try describing the role differently, or check that resumes have been ingested.' }, false);
+    return;
+  }
+
+  resultsEl.innerHTML = results.map((r) => {
+    const meta = r.metadata || {};
+    const name = meta.full_name && meta.full_name.trim() ? meta.full_name : '(name not detected)';
+    const nameClass = meta.full_name && meta.full_name.trim() ? 'name' : 'name unknown';
+    const pct = Math.round(Math.max(0, Math.min(1, r.score)) * 100);
+    const color = signalColor(r.score);
+    const skills = (meta.skills || '').split(',').map(s => s.trim()).filter(Boolean);
+    const contactParts = [meta.email, meta.phone, meta.location].filter(Boolean);
+
+    const skillTags = skills.length
+      ? skills.map(s => `<span class="skill-tag">${escapeHtml(s)}</span>`).join('')
+      : '<span class="skill-tag" style="opacity:0.5">no skills detected</span>';
+
+    return `
+      <div class="card" data-id="${escapeHtml(r.candidate_id)}">
+        <div class="card-top">
+          <label>
+            <input type="checkbox" class="select-box" data-id="${escapeHtml(r.candidate_id)}">
+            <div>
+              <p class="${nameClass}">${escapeHtml(name)}</p>
+              <p class="contact-line">${escapeHtml(contactParts.join('  ·  ') || 'no contact info detected')}</p>
+            </div>
+          </label>
+          <div class="match">
+            <div class="match-label">Match</div>
+            <div class="match-pct" style="color:${color}">${pct}%</div>
+            <div class="signal-track"><div class="signal-fill" style="width:${pct}%; background:${color}"></div></div>
+          </div>
+        </div>
+
+        <div class="skills-row">${skillTags}</div>
+
+        <div class="card-footer">
+          <span class="source-file">${escapeHtml(meta.source_file || '')}</span>
+          <button class="details-btn" data-id="${escapeHtml(r.candidate_id)}">View full details</button>
+        </div>
+
+        <div class="details-panel" id="details-${escapeHtml(r.candidate_id)}"></div>
+      </div>`;
+  }).join('');
+
+  // wire up checkboxes
+  document.querySelectorAll('.select-box').forEach(box => {
+    box.addEventListener('change', () => {
+      if (box.checked) selectedIds.add(box.dataset.id);
+      else selectedIds.delete(box.dataset.id);
+      exportBtn.disabled = selectedIds.size === 0;
+    });
+  });
+
+  // wire up detail toggles
+  document.querySelectorAll('.details-btn').forEach(btn => {
+    btn.addEventListener('click', () => toggleDetails(btn.dataset.id, btn));
+  });
+}
+
+async function toggleDetails(candidateId, btn) {
+  const panel = document.getElementById(`details-${candidateId}`);
+  const isOpen = panel.classList.contains('open');
+
+  if (isOpen) {
+    panel.classList.remove('open');
+    btn.textContent = 'View full details';
+    return;
+  }
+
+  if (!panel.dataset.loaded) {
+    panel.innerHTML = 'Loading…';
+    try {
+      const res = await fetch(`/api/candidate/${candidateId}`);
+      const record = await res.json();
+      if (!res.ok) throw new Error(record.error || 'Could not load candidate.');
+      panel.innerHTML = renderDetailFields(record);
+      panel.dataset.loaded = '1';
+    } catch (err) {
+      panel.innerHTML = `<span style="color:#e07a6b">${escapeHtml(err.message)}</span>`;
+    }
+  }
+
+  panel.classList.add('open');
+  btn.textContent = 'Hide details';
+}
+
+function renderDetailFields(record) {
+  const p = record.parsed || {};
+  const field = (label, value) => value
+    ? `<div class="field"><span class="field-label">${escapeHtml(label)}</span>${escapeHtml(value)}</div>`
+    : '';
+
+  const experience = (p.experience || []).map(e =>
+    `${escapeHtml(e.title || '')} at ${escapeHtml(e.company || '')} (${escapeHtml(e.duration || '')})${e.description ? ' — ' + escapeHtml(e.description) : ''}`
+  ).join('<br>');
+
+  const education = (p.education || []).map(e =>
+    `${escapeHtml(e.degree || '')}, ${escapeHtml(e.institution || '')} ${e.year ? '(' + escapeHtml(e.year) + ')' : ''}`
+  ).join('<br>');
+
+  return [
+    field('Summary', p.summary),
+    field('Total experience', p.total_experience_years ? `${p.total_experience_years} years` : ''),
+    experience ? field('Experience', null) + `<div class="field">${experience}</div>` : '',
+    education ? field('Education', null) + `<div class="field">${education}</div>` : '',
+    field('Certifications', (p.certifications || []).join(', ')),
+    field('Languages', (p.languages || []).join(', ')),
+    field('Source file', record.source_file),
+    field('Ingested at', record.ingested_at),
+  ].join('');
+}
+
+async function runSearch() {
+  const q = queryInput.value.trim();
+  if (!q) {
+    renderEmpty({ big: 'Type a requirement to search', small: 'e.g. "React Native developer with payments integration experience"' }, false);
+    return;
+  }
+
+  selectedIds.clear();
+  exportBtn.disabled = true;
+  statusLine.className = '';
+  statusLine.textContent = 'Searching…';
+  resultsEl.innerHTML = '';
+
+  try {
+    const top = topSelect.value;
+    const res = await fetch(`/api/search?q=${encodeURIComponent(q)}&top=${top}`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Search failed.');
+
+    lastResults = data.results;
+    statusLine.textContent = `${data.count} result${data.count === 1 ? '' : 's'} for "${data.query}"`;
+    renderResults(data.results);
+  } catch (err) {
+    statusLine.textContent = err.message;
+    statusLine.className = 'error';
+    renderEmpty({ big: 'Something went wrong', small: err.message }, true);
+  }
+}
+
+async function exportSelected() {
+  if (selectedIds.size === 0) return;
+  exportBtn.disabled = true;
+  exportBtn.textContent = 'Exporting…';
+
+  try {
+    const res = await fetch('/api/export', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ candidate_ids: Array.from(selectedIds) }),
+    });
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data.error || 'Export failed.');
+    }
+    const blob = await res.blob();
+    const disposition = res.headers.get('Content-Disposition') || '';
+    const match = disposition.match(/filename="?([^"]+)"?/);
+    const filename = match ? match[1] : 'shortlist.xlsx';
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    statusLine.textContent = err.message;
+    statusLine.className = 'error';
+  } finally {
+    exportBtn.textContent = 'Export selected to Excel';
+    exportBtn.disabled = selectedIds.size === 0;
+  }
+}
+
+searchBtn.addEventListener('click', runSearch);
+queryInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') runSearch(); });
+exportBtn.addEventListener('click', exportSelected);
+
+renderEmpty({ big: 'Search your candidate pool', small: 'Describe a role above to see ranked matches from everyone you\u2019ve ingested.' }, false);
+</script>
+</body>
+</html>

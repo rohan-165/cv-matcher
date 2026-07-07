@@ -1,0 +1,10 @@
+# Text extraction + Excel export - shallow dependency trees, install these first.
+pdfplumber>=0.11.10
+pymupdf>=1.24.14
+python-docx>=1.1.2
+pytesseract>=0.3.13
+pillow>=12.2.0
+requests>=2.32.3
+pandas>=2.2.3
+openpyxl>=3.1.5
+flask>=3.0

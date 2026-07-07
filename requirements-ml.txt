@@ -1,0 +1,8 @@
+# Embeddings + vector search - installed separately (see README) because
+# combining this deep huggingface-hub/httpx dependency tree with the
+# lightweight requirements.txt tree in one resolve can make pip's resolver
+# blow up with "resolution-too-deep" on some setups. No need to pin
+# `tokenizers` directly - it's a transitive dependency of sentence-transformers
+# and pinning it separately only adds to the resolver's search space.
+sentence-transformers>=3.4
+chromadb>=0.6
